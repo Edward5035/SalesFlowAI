@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LeadsHUB{% endblock %}</title>
+
+    <!-- Roboto font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Navbar */
+        .top-nav {
+            background-color: #000000;
+            z-index: 50;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .logo {
+            color: #FF7F00;
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .menu-icon {
+            background: none;
+            color: #FF7F00;
+            cursor: pointer;
+        }
+
+        .menu-icon i {
+            color: #FF7F00;
+            font-size: 1.5rem;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #000000;
+            padding-top: 4rem;
+            padding-right: 0.5rem;
+            position: fixed;
+            top: 4rem;
+            left: 0;
+            width: 250px;
+            height: calc(100% - 4rem);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+        }
+
+        /* Sidebar item container to wrap items */
+        .sidebar-item-container {
+            display: flex;
+            flex-direction: column;
+            padding-left: 0;
+        }
+
+        /* Sidebar items */
+        .sidebar-item {
+            display: flex;
+            align-items: center; /* Ensures vertical centering of icon and text */
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            background: #ecf0f3;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            color: #000000;
+            text-align: left;
+            height: 50px;  /* Uniform height for all items */
+            width: 100%;
+            justify-content: start;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: linear-gradient(to right, #FF7F00, #FF7F00);
+            color: white;
+        }
+
+        /* Icon Styling */
+        .sidebar-item i {
+            margin-right: 1.5rem; /* Spacing between icon and text */
+            color: #FF7F00;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .sidebar-item:hover i,
+        .sidebar-item.active i {
+            color: white;
+        }
+
+        .logout-item {
+            background: linear-gradient(to right, #FF7F00, #FF7F00) !important;
+            color: white !important;
+        }
+
+        .logout-item i {
+            color: white !important;
+        }
+
+        /* Main content area */
+        .content {
+            margin-left: 0;
+            padding: 1rem;
+            flex-grow: 1;
+            margin-top: 4rem;
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+                width: 250px;
+            }
+
+            .content {
+                margin-left: 250px;
+            }
+        }
+
+        /* Menu icon */
+        .menu-icon {
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: auto;
+            background-color: #FF7F00;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col">
+
+    <!-- Top Navbar -->
+    <div class="top-nav flex justify-between items-center p-4 fixed w-full top-0 text-white">
+        <div class="logo text-2xl font-bold flex items-center space-x-2">
+            <i class="fas fa-users-cog"></i>
+            <span>LeadsHUB</span>
+        </div>
+        <div class="menu-icon block lg:hidden" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-item-container">
+            <!-- Sidebar items -->
+            <a href="{{ url_for('dashboard') }}" class="sidebar-item">
+                <i class="fas fa-columns"></i> <span>Smart Overview</span>
+            </a>
+            <a href="{{ url_for('leads_generator') }}" class="sidebar-item">
+                <i class="fas fa-plug"></i> <span>AI Lead Generator</span>
+            </a>
+            <a href="{{ url_for('ai_lead_qualification') }}" class="sidebar-item">
+                <i class="fas fa-filter"></i> <span>AI Lead Qualifier</span>
+            </a>
+            <a href="{{ url_for('ai_lead_scoring') }}" class="sidebar-item">
+                <i class="fas fa-check-circle"></i> <span>AI Lead Validation</span>
+            </a>
+            <a href="{{ url_for('competitor_analysis') }}" class="sidebar-item">
+                <i class="fas fa-chart-line"></i> <span>Competitor Check</span>
+            </a>
+            <a href="{{ url_for('seo_boost') }}" class="sidebar-item">
+                <i class="fas fa-arrow-up"></i> <span>Instant SEO Booster</span>
+            </a>
+            <a href="{{ url_for('contact_info') }}" class="sidebar-item">
+                <i class="fas fa-users-cog"></i> <span>Contacts Hub</span>
+            </a>
+            <a href="{{ url_for('social_scout') }}" class="sidebar-item">
+                <i class="fas fa-share-alt"></i> <span>Social Scout</span>
+            </a>
+            <a href="{{ url_for('mass_outreach') }}" class="sidebar-item">
+                <i class="fas fa-broadcast-tower"></i> <span>Mass Outreach</span>
+            </a>
+            <a href="{{ url_for('help_support') }}" class="sidebar-item">
+                <i class="fas fa-headset"></i> <span>24/7 Support Hub</span>
+            </a>
+            <!-- Log Out item -->
+            <a href="{{ url_for('logout') }}" class="sidebar-item logout-item">
+                <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 LeadsHUB. All rights reserved.
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+    </script>
+
+</body>
+</html>

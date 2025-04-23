@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="min-h-screen py-12 font-sans" style="background-color: var(--bg-main); color: var(--text-main);">
+    <div class="container mx-auto px-4">
+
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold tracking-tight text-[var(--primary-color)]">
+                Generate Address Leads Now
+            </h1>
+            <p class="mt-3 text-xl leading-relaxed text-[var(--gray-500)]">
+                Find high-conversion professional leads with ease.
+            </p>
+        </div>
+
+        <!-- Enhanced Search Form -->
+        <div class="max-w-5xl mx-auto mb-12">
+            <form id="searchForm" action="{{ url_for('address_leads') }}" method="POST"
+                  class="p-8 rounded-3xl shadow-lg border"
+                  style="background-color: var(--card-main); border-color: var(--primary-color);"
+                  onsubmit="combineFormData()">
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    {% set fields = [
+                        ('service', 'Service Type', 'e.g., Opticians'),
+                        ('location', 'Location', 'e.g., Miami, FL'),
+                        ('specialty', 'Specialty', 'e.g., Eye Exams'),
+                        ('certification', 'Certification', 'e.g., OD'),
+                        ('industry', 'Industry', 'e.g., Healthcare'),
+                        ('niche', 'Niche', 'e.g., Pediatric Optometry')
+                    ] %}
+                    {% for field, label, placeholder in fields %}
+                    <div>
+                        <label for="{{ field }}" class="block text-sm font-semibold mb-2 tracking-wide text-[var(--primary-color-light)]">
+                            {{ label }}
+                        </label>
+                        <input type="text" name="{{ field }}" id="{{ field }}"
+                               class="w-full px-4 py-3 rounded-xl border"
+                               style="background-color: var(--card-main); color: var(--text-main); border-color: var(--border-main);"
+                               placeholder="{{ placeholder }}">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Hidden Combined Query -->
+                <input type="hidden" name="query" id="combinedQuery" value="{{ query }}">
+
+                <!-- Search Button -->
+                <div class="text-center">
+                    <button type="submit"
+                            class="relative overflow-hidden px-8 py-4 rounded-xl font-semibold text-white tracking-wide
+                                   bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500
+                                   hover:scale-105 transition-transform duration-300 shadow-md">
+                        <span id="buttonText">🔥 Generate Leads</span>
+                        <div id="loader" class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-70 hidden">
+                            <div class="animate-spin rounded-full h-7 w-7 border-b-2 border-white"></div>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if results %}
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-semibold mb-6 tracking-tight text-[var(--primary-color-light)]">
+                Search Results for: {{ query }}
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for result in results %}
+                <div class="p-6 rounded-2xl shadow-lg border transition-transform hover:scale-105"
+                     style="background-color: var(--card-main); border-color: var(--border-main);">
+
+                    <h3 class="text-xl font-semibold mb-2 text-yellow-400">{{ result.title }}</h3>
+
+                    {% if result.company_name != 'N/A' %}
+                    <p class="mb-2">
+                        <strong class="text-[var(--primary-color-light)]">Company:</strong>
+                        {{ result.company_name }}
+                    </p>
+                    {% endif %}
+
+                    {% if result.addresses %}
+                    <p class="mb-2">
+                        <strong class="text-[var(--primary-color-light)]">Addresses:</strong>
+                        <ul class="list-disc ml-4 mt-1">
+                            {% for address in result.addresses %}
+                            <li class="text-sm text-[var(--text-main)]">{{ address }}</li>
+                            {% endfor %}
+                        </ul>
+                    </p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Placeholder Section -->
+        {% if not results %}
+        <div class="max-w-5xl mx-auto mb-12 text-center text-[var(--gray-500)]">
+            <h2 class="text-3xl font-semibold mb-4 tracking-tight text-yellow-400">Unlock Lead Potential</h2>
+            <p class="text-lg mb-6 leading-relaxed">Enter your criteria to discover potential professional connections and detailed contact information:</p>
+            <ul class="list-disc list-inside text-left">
+                <li class="mb-2"><span class="text-yellow-300">Professional Titles</span> and Business Names</li>
+                <li class="mb-2">Concise and Relevant <span class="text-yellow-300">Descriptions</span></li>
+                <li class="mb-2">Verified <span class="text-yellow-300">Contact Details</span> (Phone, Email, Address)</li>
+                <li class="mb-2">Direct <span class="text-yellow-300">Website Links</span></li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <footer class="text-center mt-8 text-[var(--gray-500)]">
+            <p>&copy; {{ datetime.now().year }} Hot Leads Generator. All rights reserved.</p>
+        </footer>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function () {
+        document.getElementById('buttonText').innerText = 'Searching...';
+        document.getElementById('loader').classList.remove('hidden');
+    });
+
+    function combineFormData() {
+        const ids = ['service', 'location', 'specialty', 'certification', 'industry', 'niche'];
+        let combinedQuery = ids.map(id => document.getElementById(id).value.trim()).filter(Boolean).join(' ');
+        document.getElementById('combinedQuery').value = combinedQuery;
+    }
+</script>
+{% endblock %}

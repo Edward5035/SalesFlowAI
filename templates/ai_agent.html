@@ -1,0 +1,651 @@
+{% extends "layout.html" %}
+{% block title %}SalesFlow AI - Intelligent Sales Automation{% endblock %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <!-- Header Section with Premium Branding -->
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-6">
+    <div class="flex items-center">
+      <!-- AI-themed logo animation -->
+      <div class="relative w-12 h-12 mr-3">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl animate-pulse"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.29 7 12 12 20.71 7"></polyline>
+            <line x1="12" y1="22" x2="12" y2="12"></line>
+          </svg>
+        </div>
+      </div>
+      
+      <div>
+        <h1 class="text-3xl font-bold dark:text-white text-gray-800 flex items-center gap-2">
+          SalesFlow
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">AI</span>
+        </h1>
+        <div class="flex items-center mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <div class="flex items-center mr-4">
+            <div class="w-2 h-2 rounded-full bg-green-500 mr-1 animate-pulse"></div>
+            <span>AI Engine Active</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>Backend Connected</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Premium Stats Dashboard -->
+    <div class="w-full md:w-auto">
+      <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 w-full md:w-auto border border-gray-100 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Campaign Intelligence</h3>
+          <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full font-medium">Real-time</div>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="text-center">
+            <div class="flex items-center justify-center w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900 dark:to-blue-800">
+              <svg class="w-5 h-5 text-blue-600 dark:text-blue-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ lead_count|default('0') }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Active Leads</p>
+          </div>
+          <div class="text-center">
+            <div class="flex items-center justify-center w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-r from-green-100 to-green-50 dark:from-green-900 dark:to-green-800">
+              <svg class="w-5 h-5 text-green-600 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+              </svg>
+            </div>
+            <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ emails_sent|default('0') }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Emails Sent</p>
+          </div>
+          <div class="text-center">
+            <div class="flex items-center justify-center w-10 h-10 mx-auto mb-2 rounded-full bg-gradient-to-r from-purple-100 to-purple-50 dark:from-purple-900 dark:to-purple-800">
+              <svg class="w-5 h-5 text-purple-600 dark:text-purple-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+            <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ response_rate|default('0%') }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Response Rate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced Progress Tracker -->
+  <div class="mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 border border-gray-100 dark:border-gray-700">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Intelligent Workflow</h2>
+      
+      <div class="relative">
+        <!-- Progress bar -->
+        <div class="overflow-hidden h-2 mb-6 text-xs flex rounded-full bg-gray-200 dark:bg-gray-700">
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg h-full rounded-full" style="width: 33%"></div>
+        </div>
+        
+        <!-- Step circles -->
+        <div class="flex justify-between mb-2">
+          <div class="flex-1">
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 mb-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg flex items-center justify-center text-white font-bold z-10">1</div>
+              <div class="text-center">
+                <p class="font-medium dark:text-white text-sm">Lead Discovery</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">AI Powered</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 mb-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold z-10">2</div>
+              <div class="text-center">
+                <p class="font-medium dark:text-white text-sm">Message Creation</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">NLP Enhanced</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 mb-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center font-bold z-10">3</div>
+              <div class="text-center">
+                <p class="font-medium dark:text-white text-sm">Campaign Launch</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Smart Delivery</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- AI Assistant Hint -->
+      <div class="mt-4 bg-blue-50 dark:bg-gray-700/50 rounded-lg p-3 flex items-start">
+        <div class="flex-shrink-0 p-1">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-gray-700 dark:text-gray-300">
+            <span class="font-semibold text-blue-700 dark:text-blue-300">AI Assistant:</span> 
+            Complete the current step to unlock advanced AI-driven features. Our machine learning engine adapts to your targeting preferences for better results.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1: Advanced Lead Discovery -->
+  <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg flex items-center justify-center text-white font-bold mr-3">1</div>
+        <h2 class="text-xl font-semibold dark:text-white">Lead Discovery Engine</h2>
+      </div>
+      <div class="flex items-center">
+        <div class="animate-pulse mr-2 w-2 h-2 rounded-full bg-green-500"></div>
+        <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-3 py-1 rounded-full font-medium">Active Now</span>
+      </div>
+    </div>
+    
+    <form method="POST" class="mb-6" id="leadSearchForm">
+      <input type="hidden" name="form_type" value="lead_search">
+      
+      <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-5 mb-6">
+        <h3 class="text-md font-medium text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          Target Parameters
+        </h3>
+        
+        <div class="grid md:grid-cols-3 gap-5">
+          <div>
+            <label for="industry" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Industry/Keyword</label>
+            <div class="relative rounded-lg shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </div>
+              <input id="industry" name="keyword" type="text" placeholder="e.g. SaaS, eCommerce, Healthcare" class="pl-10 pr-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+            <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">AI suggests: "digital marketing", "fintech", "dental practices"</p>
+          </div>
+          
+          <div>
+            <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
+            <div class="relative rounded-lg shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <input id="location" name="location" type="text" placeholder="e.g. Boston, MA" class="pl-10 pr-12 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+            <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">Try specific regions or "remote" for virtual businesses</p>
+          </div>
+          
+          <div>
+            <label for="count" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lead Count</label>
+            <div class="relative rounded-lg shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <select id="count" name="lead_count" class="pl-10 pr-10 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none">
+                <option value="10">10 leads (test campaign)</option>
+                <option value="25" selected>25 leads (recommended)</option>
+                <option value="50">50 leads (standard campaign)</option>
+                <option value="100">100 leads (extensive campaign)</option>
+                <option value="250">250 leads (premium tier only)</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Advanced filters (collapsible) -->
+        <div class="mt-4">
+          <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <button type="button" id="toggleAdvancedFilters" class="flex items-center text-sm text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 focus:outline-none">
+              <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              Advanced AI Targeting
+              <svg id="advancedChevron" class="w-4 h-4 ml-1 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            
+            <div id="advancedFiltersContainer" class="hidden mt-4 grid md:grid-cols-3 gap-5">
+              <div>
+                <label for="company_size" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company Size</label>
+                <select id="company_size" name="company_size" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Any Size</option>
+                  <option value="1-10">1-10 employees</option>
+                  <option value="11-50">11-50 employees</option>
+                  <option value="51-200">51-200 employees</option>
+                  <option value="201-500">201-500 employees</option>
+                  <option value="501-1000">501-1000 employees</option>
+                  <option value="1000+">1000+ employees</option>
+                </select>
+              </div>
+              
+              <div>
+                <label for="revenue_range" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Annual Revenue</label>
+                <select id="revenue_range" name="revenue_range" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Any Revenue</option>
+                  <option value="<1M">Less than $1M</option>
+                  <option value="1-10M">$1M - $10M</option>
+                  <option value="10-50M">$10M - $50M</option>
+                  <option value="50-100M">$50M - $100M</option>
+                  <option value="100M+">$100M+</option>
+                </select>
+              </div>
+              
+              <div>
+                <label for="job_titles" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Target Job Titles</label>
+                <input id="job_titles" name="job_titles" type="text" placeholder="CEO, CMO, Marketing Director" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              
+              <div>
+                <label for="technologies" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Technologies Used</label>
+                <input id="technologies" name="technologies" type="text" placeholder="Salesforce, HubSpot, etc." class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              
+              <div>
+                <label for="exclude_terms" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Exclude Terms</label>
+                <input id="exclude_terms" name="exclude_terms" type="text" placeholder="Terms to exclude" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              
+              <div>
+                <label for="founded" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Founded After</label>
+                <input id="founded" name="founded" type="number" min="1900" max="2025" placeholder="Year (e.g. 2015)" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-full p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center">
+        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+          <svg class="w-5 h-5 mr-1 text-blue-500 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Our AI uses SMTP/IMAP and web scraping to find verified business emails
+        </div>
+        
+        <button type="submit" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 text-white font-medium rounded-xl px-6 py-3 flex items-center shadow-lg transition-all">
+          <svg class="w-5 h-5 mr-2 animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <circle cx="11" cy="11" r="3"></circle>
+          </svg>
+          Discover High-Quality Leads
+        </button>
+      </div>
+    </form>
+
+    {% if leads %}
+    <div class="mt-8">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center">
+          <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 mr-3">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold dark:text-white">AI-Verified Leads ({{ leads|length }})</h3>
+        </div>
+        
+        <div class="flex gap-2">
+          <button class="text-sm bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white border border-gray-200 dark:border-gray-600 px-3 py-2 rounded-lg flex items-center shadow-sm">
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export All
+          </button>
+          <button class="text-sm bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white border border-gray-200 dark:border-gray-600 px-3 py-2 rounded-lg flex items-center shadow-sm">
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Import Existing
+          </button>
+        </div>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-900/50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500">
+                    <span class="ml-2">Name / Company</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Job Title</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Confidence</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {% for lead in leads %}
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500 mr-3">
+                    <div>
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">{{ lead.name }}</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">{{ lead.company }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-blue-600 dark:text-blue-400">{{ lead.email }}</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Verified {{ lead.verified_date }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">{{ lead.job_title }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
+                      <div class="bg-green-500 h-2 rounded-full" style="width: {{ lead.confidence }}%"></div>
+                    </div>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ lead.confidence }}%</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+              
+              <!-- Sample leads if no leads are available yet -->
+              {% if not leads or leads|length == 0 %}
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500 mr-3">
+                    <div>
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">Alex Johnson</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">Acme Tech Solutions</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-blue-600 dark:text-blue-400">alex.johnson@acmetech.com</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Verified 3 days ago</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">Marketing Director</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
+                      <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+                    </div>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">92%</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="h-4 w-4 text-blue-600 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500 mr-3">
+                    <div>
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">Sarah Williams</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">Global Innovations Inc.</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-blue-600 dark:text-blue-400">s.williams@globalinnovations.com</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Verified 1 day ago</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">CEO</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
+                      <div class="bg-green-500 h-2 rounded-full" style="width: 98%"></div>
+                    </div>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">98%</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-700 dark:text-gray-300">
+              Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">25</span> results
+            </div>
+            <div class="flex items-center space-x-2">
+              <button class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50" disabled>
+                Previous
+              </button>
+              <button class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    
+    <!-- Next Steps Call-to-Action -->
+    <div class="mt-8 flex justify-end">
+      <a href="/message-creation" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 text-white font-medium rounded-xl px-8 py-3 flex items-center shadow-lg transition-all">
+        <span>Proceed to Message Creation</span>
+        <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Enhanced AI Features Dashboard -->
+  <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-semibold dark:text-white flex items-center">
+        <svg class="w-6 h-6 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.29 7 12 12 20.71 7"></polyline>
+          <line x1="12" y1="22" x2="12" y2="12"></line>
+        </svg>
+        AI-Powered Assistants
+      </h2>
+      
+      <button class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium flex items-center">
+        Configure AI Settings
+        <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- AI Feature Card 1 -->
+      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-bl-full"></div>
+        
+        <div class="flex items-center mb-4">
+          <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 mr-3">
+            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <path d="M16 13a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"></path>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12" y2="17"></line>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Lead Research</h3>
+        </div>
+        
+        <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+          AI scrapes multiple data sources to compile detailed prospect information and verifies email addresses before outreach.
+        </p>
+        
+        <div class="flex items-center justify-between text-sm">
+          <div class="flex items-center text-green-600 dark:text-green-400">
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            Active
+          </div>
+          <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full">
+            Pro Feature
+          </span>
+        </div>
+      </div>
+      
+      <!-- AI Feature Card 2 -->
+      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-bl-full"></div>
+        
+        <div class="flex items-center mb-4">
+          <div class="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 mr-3">
+            <svg class="w-6 h-6 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Personalized Messaging</h3>
+        </div>
+        
+        <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+          AI analyzes prospect data to craft highly personalized outreach messages that resonate with each individual lead.
+        </p>
+        
+        <div class="flex items-center justify-between text-sm">
+          <div class="flex items-center text-gray-500 dark:text-gray-400">
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 7a3 3 0 0 1-6 0v-7"></path>
+            </svg>
+            Unlocks in Step 2
+          </div>
+          <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">
+            Coming Soon
+          </span>
+        </div>
+      </div>
+      
+      <!-- AI Feature Card 3 -->
+      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-bl-full"></div>
+        
+        <div class="flex items-center mb-4">
+          <div class="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 mr-3">
+            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Response Analytics</h3>
+        </div>
+        
+        <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+          AI monitors campaign performance and provides actionable insights to optimize future outreach strategies.
+        </p>
+        
+        <div class="flex items-center justify-between text-sm">
+          <div class="flex items-center text-gray-500 dark:text-gray-400">
+            <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-

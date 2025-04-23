@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}Lead Mastery Dashboard{% endblock %}
+
+{% block content %}
+<div class="card mt-6 animate__animated animate__fadeIn">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">Lead Summary Overview</h1>
+    <p class="page-subtitle">Here's a breakdown of your captured lead data.</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="dashboard-stats">
+
+    <!-- Total Leads -->
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-rocket fa-lg"></i>
+      </div>
+      <div class="stat-title">Total Leads</div>
+      <div class="stat-value">{{ session.get('email_count', 0) + session.get('phone_count', 0) }}</div>
+    </div>
+
+    <!-- Qualified Leads -->
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-check-circle fa-lg"></i>
+      </div>
+      <div class="stat-title">Qualified Leads</div>
+      <div class="stat-value">{{ session.get('email_count', 0) }}</div>
+    </div>
+
+    <!-- Email Leads -->
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-envelope fa-lg"></i>
+      </div>
+      <div class="stat-title">Email Leads</div>
+      <div class="stat-value">{{ session.get('email_count', 0) }}</div>
+    </div>
+
+    <!-- Phone Leads -->
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-phone-alt fa-lg"></i>
+      </div>
+      <div class="stat-title">Phone Leads</div>
+      <div class="stat-value">{{ session.get('phone_count', 0) }}</div>
+    </div>
+
+  </div>
+
+  <!-- Lead Completion Progress -->
+  <div class="card my-8">
+    <h2 class="text-xl font-bold text-[var(--primary-color)] mb-4">Lead Completion</h2>
+    <div class="flex justify-center">
+      <div class="w-64 h-64 relative">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" stroke-width="10" stroke="#2c3e50" fill="none" />
+          <circle cx="50" cy="50" r="45" stroke-width="10" stroke="#FF7F50" fill="none" stroke-dasharray="283" stroke-dashoffset="{{ 283 - (session.get('email_count', 0) + session.get('phone_count', 0)) * 283 / 1000 }}" />
+        </svg>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+          <h6 class="text-lg font-medium text-[var(--primary-color)]">Progress</h6>
+          <h4 class="text-4xl font-extrabold text-yellow-400">{{ session.get('email_count', 0) + session.get('phone_count', 0) }} / 1000</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Start Guide Section -->
+  <div class="card">
+    <h4 class="text-xl text-center font-semibold text-[var(--primary-color)] mb-6">Your Lead Journey Starts Here</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for icon, title, description, color in [
+          ('fa-tachometer-alt', 'Dashboard Insights', 'Get instant insights into your lead generation performance.', 'text-yellow-400'),
+          ('fa-search-location', 'Lead Prospecting', 'Find and engage with high-potential leads.', 'text-orange-400'),
+          ('fa-user-check', 'Lead Nurturing', 'Build strong relationships with your leads through personalized nurturing.', 'text-green-400'),
+          ('fa-clipboard-list', 'Email Automation', 'Streamline your email outreach with automated workflows.', 'text-purple-400'),
+          ('fa-phone-alt', 'Phone Lead Management', 'Effortlessly manage and follow up on phone leads.', 'text-teal-400'),
+          ('fa-map-marker-alt', 'Address Lead Collection', 'Organize and utilize address leads for targeted campaigns.', 'text-red-400'),
+          ('fa-user-friends', 'People Search', 'Uncover detailed profiles of potential leads and clients.', 'text-orange-500'),
+          ('fa-share-alt', 'Social Media Lead Generation', 'Harness social media to discover and engage with new leads.', 'text-pink-400'),
+          ('fa-life-ring', '24/7 Support', 'Access expert support whenever you need it.', 'text-blue-200'),
+          ('fa-sign-out-alt', 'Log Out', 'Securely log out of your account.', 'text-red-500')
+      ] %}
+      <div class="p-6 rounded-xl border border-[var(--border-main)] shadow-md hover:scale-105 transition-all text-center" style="background-color: var(--card-main); color: var(--text-main);">
+        <i class="fas {{ icon }} fa-2x md:fa-3x lg:fa-4x {{ color }} mb-4"></i>
+        <h6 class="text-lg font-semibold text-[var(--primary-color)]">{{ title }}</h6>
+        <p class="text-[var(--gray-500)]">{{ description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

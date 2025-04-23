@@ -1,0 +1,202 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="min-h-screen py-12 font-sans" style="background-color: var(--bg-main); color: var(--text-main);">
+    <div class="card mx-auto px-4">
+
+        <!-- Header Section -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[var(--primary-color)] tracking-tight">
+                Generate Hot Leads Now
+            </h1>
+            <p class="mt-3 text-lg md:text-xl text-[var(--gray-500)] leading-relaxed">Find high-conversion professional leads with ease.</p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="mb-12">
+            <form id="searchForm" action="{{ url_for('hot_leads') }}" method="POST"
+                  class="p-6 md:p-8 rounded-3xl border border-[var(--primary-color)] shadow-md"
+                  style="background-color: var(--card-main);" onsubmit="combineFormData()">
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    {% for field, label, placeholder in [
+                        ('service', 'Service Type', 'e.g., Opticians'),
+                        ('location', 'Location', 'e.g., Miami, FL'),
+                        ('specialty', 'Specialty', 'e.g., Eye Exams'),
+                        ('certification', 'Certification', 'e.g., OD'),
+                        ('industry', 'Industry', 'e.g., Healthcare'),
+                        ('niche', 'Niche', 'e.g., Pediatric Optometry')
+                    ] %}
+                    <div>
+                        <label for="{{ field }}" class="block text-sm font-semibold mb-2 tracking-wide" style="color: var(--primary-color-light);">{{ label }}</label>
+                        <input type="text" name="{{ field }}" id="{{ field }}"
+                               class="w-full px-4 py-3 rounded-xl border border-[var(--border-main)]"
+                               style="background-color: var(--card-main); color: var(--text-main);"
+                               placeholder="{{ placeholder }}">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <input type="hidden" name="query" id="combinedQuery" value="{{ query }}">
+
+                <div class="text-center">
+                    <button type="submit"
+                            class="relative overflow-hidden px-8 py-4 rounded-xl font-semibold text-white tracking-wide
+                                   bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500
+                                   hover:scale-105 transition-transform duration-300 shadow-md">
+                        <span id="buttonText">🔥 Generate Leads</span>
+                        <div id="loader" class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-70 hidden">
+                            <div class="animate-spin rounded-full h-7 w-7 border-b-2 border-white"></div>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if not results %}
+        <div class="text-center text-[var(--gray-500)]">
+            <h2 class="text-2xl font-semibold mb-4">Unlock Lead Potential</h2>
+            <p class="text-md mb-6 leading-relaxed">Enter your criteria to discover professional leads and detailed contact info.</p>
+        </div>
+        {% endif %}
+
+        {% if results %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for result in results %}
+            <div class="result-item rounded-2xl p-6 shadow-md border border-[var(--primary-color)] hover:shadow-xl transition-all"
+                 style="background-color: var(--card-main); color: var(--text-main);"
+                 data-title="{{ result.title }}" data-description="{{ result.description }}"
+                 data-emails="{{ result.emails|join(',') if result.emails }}"
+                 data-phone_numbers="{{ result.phone_numbers|join(',') if result.phone_numbers }}"
+                 data-address="{{ result.addresses|join(',') if result.addresses }}">
+
+                <div class="mb-4">
+                    <h3 class="text-xl font-semibold text-[var(--primary-color)]">{{ result.title }}</h3>
+                    <p class="text-sm mt-1 text-[var(--gray-500)]">{{ result.description }}</p>
+                </div>
+
+                <div class="space-y-3">
+                    {% if result.phone_numbers %}
+                    <p class="text-sm text-green-500 font-mono">📞 {{ result.phone_numbers|join(', ') }}</p>
+                    {% endif %}
+                    {% if result.emails %}
+                    <p class="text-sm text-blue-400">📧 {{ result.emails|join(', ') }}</p>
+                    {% endif %}
+                    {% if result.addresses %}
+                    <p class="text-sm">📍 {{ result.addresses|join(', ') }}</p>
+                    {% endif %}
+                </div>
+
+                {% if result.link %}
+                <div class="mt-4">
+                    <a href="{{ result.link }}" target="_blank" class="text-sm text-blue-500 underline hover:text-blue-300">Visit Website</a>
+                </div>
+                {% endif %}
+
+                <div class="mt-4 text-right">
+                    <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-semibold shadow-md hover:scale-105 transition-transform" onclick="copyResult(this)">Copy</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-8 text-center">
+            <button id="copyAllButton" class="px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-600 text-white font-semibold shadow-md hover:scale-105 transition-transform">Copy All Results</button>
+        </div>
+        {% else %}
+        <p class="text-center mt-10 text-[var(--gray-500)]">No results available.</p>
+        {% endif %}
+    </div>
+</div>
+<script>
+// ... your JS here remains unchanged ...
+
+    function combineFormData() {
+        const service = document.getElementById('service').value;
+        const location = document.getElementById('location').value;
+        const specialty = document.getElementById('specialty').value;
+		const certification = document.getElementById('certification').value;
+        const industry = document.getElementById('industry').value;
+        const niche = document.getElementById('niche').value;
+
+        let combinedQuery = '';
+
+        if (service) combinedQuery += service + ' ';
+        if (location) combinedQuery += location + ' ';
+        if (specialty) combinedQuery += specialty + ' ';
+		if (certification) combinedQuery += certification + ' ';
+        if (industry) combinedQuery += industry + ' ';
+        if (niche) combinedQuery += niche;
+
+        document.getElementById('combinedQuery').value = combinedQuery.trim();
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', function() {
+        document.getElementById('buttonText').innerText = 'Generating Leads...';
+        document.getElementById('loader').classList.remove('hidden');
+    });
+
+    function copyResult(element) {
+        const resultItem = element.closest('.result-item');
+        const title = resultItem.dataset.title || '';
+        const description = resultItem.dataset.description || '';
+        const emails = resultItem.dataset.emails ? resultItem.dataset.emails.split(',').join('; ') : '';
+        const phoneNumbers = resultItem.dataset.phone_numbers ? resultItem.dataset.phone_numbers.split(',').join('; ') : '';
+        const address = resultItem.dataset.address || '';
+
+        let textToCopy = '';
+        if (title) textToCopy += `Title: ${title}\n`;
+        if (description) textToCopy += `Description: ${description}\n`;
+        if (emails) textToCopy += `Emails: ${emails}\n`;
+        if (phoneNumbers) textToCopy += `Phone Numbers: ${phoneNumbers}\n`;
+        if (address) textToCopy += `Address: ${address}\n`;
+
+        copyToClipboard(textToCopy);
+        Swal.fire({
+            icon: 'success',
+            title: 'Result Copied!',
+            text: 'The result has been copied to your clipboard.',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    }
+
+    document.getElementById('copyAllButton').addEventListener('click', function() {
+        let allText = '';
+        document.querySelectorAll('.result-item').forEach(item => {
+            const title = item.dataset.title || '';
+            const description = item.dataset.description || '';
+            const emails = item.dataset.emails ? item.dataset.emails.split(',').join('; ') : '';
+            const phoneNumbers = item.dataset.phone_numbers ? item.dataset.phone_numbers.split(',').join('; ') : '';
+            const address = item.dataset.address || '';
+
+            if (title) allText += `Title: ${title}\n`;
+            if (description) allText += `Description: ${description}\n`;
+            if (emails) allText += `Emails: ${emails}\n`;
+            if (phoneNumbers) allText += `Phone Numbers: ${phoneNumbers}\n`;
+            if (address) allText += `Address: ${address}\n\n`;
+        });
+
+        copyToClipboard(allText);
+        Swal.fire({
+            icon: 'success',
+            title: 'All Results Copied!',
+            text: 'All results have been copied to your clipboard.',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    });
+
+    
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            console.log('Text copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    }
+
+
+</script>
+{% endblock %}

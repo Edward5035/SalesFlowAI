@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.className = 'dark';
+    } else {
+      document.documentElement.className = 'light';
+    }
+  })();
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SalesFlow AI{% endblock %}</title>
+
+    <!-- Inter Font - More modern, professional typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- Phosphor Icons - Modern, clean icon set -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/phosphor-icons@1.4.2/src/css/icons.min.css">
+    <!-- Font Awesome for backward compatibility -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+    :root {
+        --primary-color: #FF6B00; /* Brighter orange */
+        --primary-color-light: #FF8F3C; /* Lighter orange for hover */
+        --primary-gradient: linear-gradient(135deg, #FF6B00, #FF8F3C);
+        --secondary-gradient: linear-gradient(135deg, #3B82F6, #60A5FA);
+        
+        /* Light theme variables */
+        --bg-light: #F9FAFB;
+        --text-light: #111827;
+        --sidebar-light: #ffffff;
+        --card-light: #ffffff;
+        --border-light: #E5E7EB;
+        --navbar-light: #ffffff;
+        --navbar-text-light: #111827;
+        
+        /* Dark theme variables */
+        --bg-dark: #0F172A;
+        --text-dark: #F3F4F6;
+        --sidebar-dark: #1E293B;
+        --card-dark: #1E293B;
+        --border-dark: #2D3748;
+        --navbar-dark: #0F172A;
+        --navbar-text-dark: #F3F4F6;
+        
+        --gray-400: #94A3B8;
+        --gray-500: #64748B;
+        --gray-600: #475569;
+        --green-500: #10B981; /* Success */
+        --red-500: #EF4444; /* Error/warning */
+    }
+
+    html.light {
+        --bg-main: var(--bg-light);
+        --text-main: var(--text-light);
+        --sidebar-main: var(--sidebar-light);
+        --card-main: var(--card-light);
+        --border-main: var(--border-light);
+        --navbar-main: var(--navbar-light);
+        --navbar-text: var(--navbar-text-light);
+    }
+
+    html.dark {
+        --bg-main: var(--bg-dark);
+        --text-main: var(--text-dark);
+        --sidebar-main: var(--sidebar-dark);
+        --card-main: var(--card-dark);
+        --border-main: var(--border-dark);
+        --navbar-main: var(--navbar-dark);
+        --navbar-text: var(--navbar-text-dark);
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        letter-spacing: -0.01em;
+        line-height: 1.6;
+    }
+
+    /* Top Navbar */
+    .top-nav {
+        background-color: var(--navbar-main);
+        z-index: 50;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--navbar-text);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        backdrop-filter: blur(12px);
+    }
+    
+    html.light .top-nav {
+        background-color: rgba(255, 255, 255, 0.95);
+    }
+    
+    html.dark .top-nav {
+        background-color: rgba(15, 23, 42, 0.95);
+    }
+
+    .logo {
+        color: var(--primary-color);
+        font-size: 1.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        letter-spacing: -0.03em;
+    }
+
+    .logo i {
+        font-size: 2.25rem;
+        margin-right: 0.5rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .theme-toggle, .notifications, .menu-icon {
+        background: none;
+        color: var(--navbar-text);
+        cursor: pointer;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover, .notifications:hover, .menu-icon:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    html.dark .theme-toggle:hover, 
+    html.dark .notifications:hover, 
+    html.dark .menu-icon:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .theme-toggle i, .notifications i {
+        font-size: 1.25rem;
+        color: var(--navbar-text);
+        transition: color 0.2s ease;
+    }
+
+    /* Hamburger Menu Animation */
+    .hamburger {
+        width: 24px;
+        height: 20px;
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .hamburger span {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background-color: var(--navbar-text);
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
+
+    .hamburger.open span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .notifications {
+        position: relative;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: var(--primary-gradient);
+        color: white;
+        font-size: 0.7rem;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(255, 107, 0, 0.3);
+        font-weight: 600;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        background-color: var(--sidebar-main);
+        padding: 2rem 1.25rem;
+        position: fixed;
+        top: 4rem;
+        left: 0;
+        width: 260px;
+        height: calc(100% - 4rem);
+        overflow-y: auto;
+        transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        z-index: 40;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--border-main);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Initially hide sidebar on mobile only */
+    @media (max-width: 1023px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    /* Style the scrollbar */
+    .sidebar::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+        background-color: var(--gray-400);
+        border-radius: 4px;
+    }
+    
+    .sidebar-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .sidebar-heading {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--gray-500);
+        margin-bottom: 0.75rem;
+        padding-left: 1rem;
+        letter-spacing: 0.05em;
+    }
+
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+        color: var(--text-main);
+        text-align: left;
+        height: 50px;
+        justify-content: flex-start;
+        font-size: 0.95rem;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Sidebar item hover/active indicator */
+    .sidebar-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: var(--primary-gradient);
+        border-radius: 0 3px 3px 0;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .sidebar-item:hover::before,
+    .sidebar-item.active::before {
+        opacity: 1;
+    }
+
+    .sidebar-item i {
+        min-width: 30px;
+        margin-right: 0.75rem;
+        color: var(--gray-500);
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+    }
+
+    .sidebar-item span {
+        display: inline-flex;
+        align-items: center;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sidebar-item:hover,
+    .sidebar-item.active {
+        background-color: rgba(255, 107, 0, 0.08);
+        color: var(--primary-color);
+        transform: translateX(3px);
+    }
+
+    .sidebar-item:hover i,
+    .sidebar-item.active i {
+        color: var(--primary-color);
+    }
+
+    .logout-item {
+        margin-top: auto;
+        border: 1px solid var(--red-500);
+        color: var(--red-500);
+        background-color: rgba(239, 68, 68, 0.08);
+        border-radius: 10px;
+    }
+
+    .logout-item i {
+        color: var(--red-500);
+    }
+    
+    .logout-item:hover {
+        background-color: var(--red-500);
+        color: white;
+    }
+    
+    .logout-item:hover i {
+        color: white;
+    }
+
+    /* Main content area */
+    .content {
+        margin-left: 0;
+        padding: 2rem;
+        flex-grow: 1;
+        margin-top: 4rem;
+        transition: margin-left 0.3s ease;
+    }
+
+    @media (min-width: 1024px) {
+        .content {
+            margin-left: 260px;
+            padding: 2.5rem;
+        }
+    }
+
+    /* Card styling */
+    .card {
+        background-color: var(--card-main);
+        border-radius: 16px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        padding: 1.75rem;
+        margin-bottom: 1.75rem;
+        border: 1px solid var(--border-main);
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+    }
+
+    /* Footer styles */
+    footer {
+        margin-top: auto;
+        background-color: var(--navbar-main);
+        color: var(--navbar-text);
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.875rem;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Notification dropdown */
+    .notification-dropdown {
+        position: absolute;
+        top: 60px;
+        right: 1rem;
+        width: 340px;
+        background-color: var(--card-main);
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        border: 1px solid var(--border-main);
+        z-index: 100;
+        transition: all 0.3s ease;
+        transform: translateY(-10px);
+        opacity: 0;
+        pointer-events: none;
+        max-height: 450px;
+        overflow-y: auto;
+        color: var(--text-main);
+    }
+
+    .notification-dropdown.show {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .notification-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border-main);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .notification-header h3 {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    
+    .notification-header button {
+        color: var(--primary-color);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .notification-item {
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border-main);
+        display: flex;
+        align-items: flex-start;
+        gap: 0.875rem;
+        transition: all 0.2s ease;
+    }
+
+    .notification-item:hover {
+        background-color: rgba(0,0,0,0.02);
+    }
+
+    html.dark .notification-item:hover {
+        background-color: rgba(255,255,255,0.03);
+    }
+
+    .notification-icon {
+        background: var(--primary-gradient);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(255, 107, 0, 0.25);
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+    
+    .notification-text {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+        line-height: 1.5;
+    }
+
+    .notification-time {
+        font-size: 0.75rem;
+        color: var(--gray-400);
+        margin-top: 0.5rem;
+        font-weight: 500;
+    }
+
+    .new-notification {
+        position: relative;
+    }
+
+    .new-notification::after {
+        content: '';
+        position: absolute;
+        top: 1.25rem;
+        right: 1.25rem;
+        width: 8px;
+        height: 8px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+    }
+
+    /* Sample dashboard cards */
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background-color: var(--card-main);
+        border-radius: 16px;
+        padding: 1.75rem;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-main);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 30px rgba(0,0,0,0.08);
+    }
+    
+    /* Add subtle gradient overlay */
+    .stat-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: var(--primary-gradient);
+        opacity: 0.8;
+    }
+    
+    /* Different colors for different stat cards */
+    .stat-card:nth-child(2)::after {
+        background: linear-gradient(135deg, #10B981, #34D399);
+    }
+    
+    .stat-card:nth-child(3)::after {
+        background: linear-gradient(135deg, #3B82F6, #60A5FA);
+    }
+    
+    .stat-card:nth-child(4)::after {
+        background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+    }
+
+    .stat-icon {
+        width: 54px;
+        height: 54px;
+        background: rgba(255, 107, 0, 0.1);
+        color: var(--primary-color);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    
+    .stat-card:nth-child(2) .stat-icon {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10B981;
+    }
+    
+    .stat-card:nth-child(3) .stat-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3B82F6;
+    }
+    
+    .stat-card:nth-child(4) .stat-icon {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8B5CF6;
+    }
+    
+    .stat-card:hover .stat-icon {
+        background: var(--primary-gradient);
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .stat-card:nth-child(2):hover .stat-icon {
+        background: linear-gradient(135deg, #10B981, #34D399);
+    }
+    
+    .stat-card:nth-child(3):hover .stat-icon {
+        background: linear-gradient(135deg, #3B82F6, #60A5FA);
+    }
+    
+    .stat-card:nth-child(4):hover .stat-icon {
+        background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+    }
+
+    .stat-title {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.02em;
+    }
+
+    .stat-change {
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        width: fit-content;
+    }
+
+    .stat-change.positive {
+        color: #10B981;
+        background-color: rgba(16, 185, 129, 0.1);
+    }
+
+    .stat-change.negative {
+        color: #EF4444;
+        background-color: rgba(239, 68, 68, 0.1);
+    }
+    
+    /* Page header */
+    .page-header {
+        margin-bottom: 2rem;
+    }
+   
+
+/* Modern Badge Styles */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.6rem;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 4px;
+    margin-left: 8px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    position: relative;
+    top: -1px;
+    letter-spacing: 0.05em;
+    box-shadow: none;
+    backdrop-filter: blur(4px);
+}
+
+/* Modern Sleek Badge Styles */
+.badge-premium {
+    background: rgba(155, 89, 182, 0.9);
+    color: white;
+    border-left: 3px solid #8e44ad;
+}
+
+.badge-new {
+    background: rgba(52, 152, 219, 0.9);
+    color: white;
+    border-left: 3px solid #2980b9;
+}
+
+.badge-hot {
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    border-left: 3px solid #c0392b;
+}
+
+.badge-vip {
+    background: rgba(241, 196, 15, 0.9);
+    color: white;
+    border-left: 3px solid #f39c12;
+}
+
+/* Dark mode adjustments */
+html.dark .badge {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+html.dark .badge-premium {
+    background: rgba(155, 89, 182, 0.7);
+}
+
+html.dark .badge-new {
+    background: rgba(52, 152, 219, 0.7);
+}
+
+html.dark .badge-hot {
+    background: rgba(231, 76, 60, 0.7);
+}
+
+html.dark .badge-vip {
+    background: rgba(241, 196, 15, 0.7);
+}
+
+/* Make sidebar items with badges consistent with hover/active states */
+.sidebar-item:hover .badge,
+.sidebar-item.active .badge {
+    transform: translateX(2px);
+    filter: brightness(1.1);
+}
+
+/* Add subtle glow effect on hover */
+.badge:hover {
+    box-shadow: 0 0 8px rgba(255,255,255,0.3);
+}
+
+html.dark .badge:hover {
+    box-shadow: 0 0 8px rgba(255,255,255,0.2);
+}
+
+/* Subtle animation for new and hot badges */
+@keyframes subtlePulse {
+    0% { opacity: 0.9; }
+    50% { opacity: 1; }
+    100% { opacity: 0.9; }
+}
+
+.badge-new, .badge-hot {
+    animation: subtlePulse 2s infinite;
+}
+
+/* Alternative Tags-style Badges */
+.badge-alt {
+    border-radius: 3px;
+    padding: 0.15rem 0.4rem;
+    font-weight: 500;
+    font-size: 0.55rem;
+    letter-spacing: 0.03em;
+    border: none;
+    background: rgba(0,0,0,0.06);
+    color: var(--text-main);
+}
+
+html.dark .badge-alt {
+    background: rgba(255,255,255,0.1);
+}
+
+.badge-alt.badge-premium {
+    color: #9b59b6;
+    background: rgba(155, 89, 182, 0.15);
+    border-left: 2px solid #9b59b6;
+}
+
+.badge-alt.badge-new {
+    color: #3498db;
+    background: rgba(52, 152, 219, 0.15);
+    border-left: 2px solid #3498db;
+}
+
+.badge-alt.badge-hot {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.15);
+    border-left: 2px solid #e74c3c;
+}
+
+.badge-alt.badge-vip {
+    color: #f39c12;
+    background: rgba(241, 196, 15, 0.15);
+    border-left: 2px solid #f39c12;
+}
+
+html.dark .badge-alt.badge-premium {
+    background: rgba(155, 89, 182, 0.2);
+}
+
+html.dark .badge-alt.badge-new {
+    background: rgba(52, 152, 219, 0.2);
+}
+
+html.dark .badge-alt.badge-hot {
+    background: rgba(231, 76, 60, 0.2);
+}
+
+html.dark .badge-alt.badge-vip {
+    background: rgba(241, 196, 15, 0.2);
+}
+
+
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--text-main);
+        margin-bottom: 0.5rem;
+    }
+    
+    .page-subtitle {
+        color: var(--gray-500);
+        font-size: 1rem;
+    }
+    .badge-upgrade {
+    background: rgba(255, 107, 0, 0.9);
+    color: white;
+    border-left: 3px solid #e65100;
+}
+
+.pro-badge {
+    background-color: #e91e63;
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 5px;
+    margin-left: 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    white-space: nowrap;
+    max-width: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+html.dark .badge-upgrade {
+    background: rgba(255, 107, 0, 0.7);
+}
+
+    
+    /* Pulse animation for notification badge */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .notification-badge {
+        animation: pulse 2s infinite;
+    }
+</style>
+
+</head>
+<body class="flex flex-col">
+
+    <!-- Top Navbar -->
+    <div class="top-nav">
+        <div class="logo animate__animated animate__fadeInLeft flex items-center space-x-3">
+   <img src="{{ url_for('static', filename='logo.png') }}" alt="SalesFlow AI Logo" class="h-16 w-auto">
+</div>
+
+
+        <div class="nav-controls">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            
+            <button class="notifications" id="notificationBtn" aria-label="View notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            
+            <button class="menu-icon block lg:hidden" aria-label="Toggle menu" id="menuToggle">
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Dropdown -->
+    <div class="notification-dropdown" id="notificationDropdown">
+        <div class="notification-header">
+            <h3>Notifications (3)</h3>
+            <button>Mark all as read</button>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item new-notification">
+                <div class="notification-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">New hot lead available</div>
+                    <div class="notification-text">A new lead matching your criteria was found.</div>
+                    <div class="notification-time">2 minutes ago</div>
+                </div>
+            </div>
+            <div class="notification-item new-notification">
+                <div class="notification-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Email campaign completed</div>
+                    <div class="notification-text">Your recent email campaign has finished with 68% open rate.</div>
+                    <div class="notification-time">1 hour ago</div>
+                </div>
+            </div>
+            <div class="notification-item new-notification">
+                <div class="notification-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Weekly report ready</div>
+                    <div class="notification-text">Your lead generation report for this week is now available.</div>
+                    <div class="notification-time">Yesterday</div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Premium features unlocked</div>
+                    <div class="notification-text">You now have access to all premium features.</div>
+                    <div class="notification-time">2 days ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-heading">Main</div>
+            <a href="{{ url_for('dashboard') }}" class="sidebar-item active">
+                <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('hot_leads') }}" class="sidebar-item">
+                <i class="fas fa-fire"></i><span>Hot Leads <span class="pro-badge">PRO</span></span>
+
+            </a>
+            <a href="{{ url_for('lead_manager') }}" class="sidebar-item">
+                <i class="fas fa-user-friends"></i> <span>Lead Manager</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="sidebar-heading">Lead Sources</div>
+            <a href="{{ url_for('email_leads') }}" class="sidebar-item">
+                <i class="fas fa-envelope"></i> <span>Email Leads</span>
+            </a>
+            <a href="{{ url_for('phone_leads') }}" class="sidebar-item">
+                <i class="fas fa-phone"></i> <span>Phone Leads</span>
+            </a>
+            <a href="{{ url_for('address_leads') }}" class="sidebar-item">
+                <i class="fas fa-share-nodes"></i> <span>Location Leads</span>
+            </a>
+            <a href="{{ url_for('people_search') }}" class="sidebar-item">
+                <i class="fas fa-users"></i> <span>People Search <span class="pro-badge">PRO</span></span>
+
+            </a>
+            <a href="{{ url_for('social_media_leads') }}" class="sidebar-item">
+                <i class="fas fa-share-nodes"></i> <span>Social Leads <span class="pro-badge">PRO</span></span>
+
+            </a>
+        </div>
+      <!-- Update the sidebar premium section with enhanced badges -->
+
+        
+        <div class="sidebar-section">
+            <div class="sidebar-heading">Support</div>
+            <a href="{{ url_for('help_support') }}" class="sidebar-item">
+                <i class="fas fa-headset"></i> <span>24/7 Help Desk</span>
+            </a>
+        </div>
+        
+        <a href="{{ url_for('logout') }}" class="sidebar-item logout-item">
+            <i class="fas fa-right-from-bracket"></i> <span>Log Out</span>
+        </a>
+    </div>
+
+    <!-- Content -->
+    <main class="content">
+        {% block content %}
+        <!-- Dashboard Sample Content -->
+        <div class="page-header animate__animated animate__fadeIn">
+            <h1 class="page-title">Welcome back, Alex</h1>
+            <p class="page-subtitle">Here's what's happening with your leads today.</p>
+        </div>
+        
+        <div class="dashboard-stats animate__animated animate__fadeIn">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-plus fa-lg"></i>
+                </div>
+                <div class="stat-title">New Leads</div>
+                <div class="stat-value">127</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    <span>18.2% from last week</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-envelope-open fa-lg"></i>
+                </div>
+                <div class="stat-title">Email Responses</div>
+                <div class="stat-value">48</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    <span>5.3% from last week</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-phone-volume fa-lg"></i>
+                </div>
+                <div class="stat-title">Calls Made</div>
+                <div class="stat-value">83</div>
+                <div class="stat-change negative">
+                    <i class="fas fa-arrow-down mr-1"></i>
+                    <span>2.7% from last week</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-handshake fa-lg"></i>
+                </div>
+                <div class="stat-title">Conversions</div>
+                <div class="stat-value">21</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    <span>12.5% from last week</span>
+                </div>
+            </div>
+        </div>
+        
+      
+        <div class="card animate__animated animate__fadeIn">
+            <h2 class="text-xl font-bold mb-4">Recent Activity</h2>
+            <p class="mb-4">Your lead generation and management system shows increased engagement over the past week. The new email campaign has been particularly effective with a 68% open rate.</p>
+            <p>Keep exploring the features using the sidebar navigation to maximize your lead generation efforts.</p>
+        </div>
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 SalesFlow AI. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const html = document.querySelector('html');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.getElementById('hamburger');
+            const menuToggle = document.getElementById('menuToggle');
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            
+            // No automatic sidebar animation on page load 
+            // Only animate sidebar items when toggling menu on mobile
+            
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', function() {
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark');
+                    html.classList.add('light');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                } else {
+                    html.classList.remove('light');
+                    html.classList.add('dark');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            });
+            
+            // Menu toggle for mobile
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+                hamburger.classList.toggle('open');
+                
+                // Only apply animation when toggling the sidebar on mobile
+                if (window.innerWidth < 1024) {
+                    if (sidebar.classList.contains('open')) {
+                        // Add animations when opening
+                        sidebarItems.forEach((item, index) => {
+                            item.classList.add('animate__animated', 'animate__fadeInLeft');
+                            item.style.animationDelay = `${index * 0.05}s`;
+                        });
+                    } else {
+                        // Remove animations when closing
+                        sidebarItems.forEach(item => {
+                            item.classList.remove('animate__animated', 'animate__fadeInLeft');
+                            item.style.animationDelay = '';
+                        });
+                    }
+                }
+            });
+            
+            // Notifications dropdown
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('show');
+            });
+            
+            // Close notifications when clicking elsewhere
+            document.addEventListener('click', function(e) {
+                if (!notificationBtn.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                    notificationDropdown.classList.remove('show');
+                }
+            });
+            
+            // Highlight active page in sidebar
+            const currentUrl = window.location.pathname;
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                const itemUrl = item.getAttribute('href');
+                if (currentUrl === itemUrl) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Check for saved theme preference or use system preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                html.className = savedTheme;
+                if (savedTheme === 'dark') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            } else {
+                // Check system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.classList.remove('light');
+                    html.classList.add('dark');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            }
+            
+            // Save theme preference when changed
+            themeToggle.addEventListener('click', function() {
+                localStorage.setItem('theme', html.className);
+            });
+            
+            // Smooth hover effects for all interactive elements
+            const interactiveElements = document.querySelectorAll('a, button, .card, .stat-card');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

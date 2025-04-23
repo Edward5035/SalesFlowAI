@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LeadVortex AI</title>
+    <!-- Importing Google Fonts (Special Font for the Logo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Logo Container Styling */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+        }
+        
+        .logo-container::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background: #ff9100; /* Orange background for the logo line */
+            bottom: 0;
+            left: 0;
+        }
+        @keyframes pulseLock {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.animate-lock {
+  animation: pulseLock 2s infinite ease-in-out;
+}
+
+        
+        .logo-img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        /* Glowing effect for button */
+        .glow-button:hover {
+            box-shadow: 0 0 15px #ff9100;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        /* Interactive Canvas Background */
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        
+        /* Input field focus effect */
+        .input-focus:focus {
+            border-color: #ff9100;
+            box-shadow: 0 0 0 3px rgba(255, 145, 0, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 145, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 145, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 145, 0, 0); }
+        }
+        
+        /* Glass morphism effect */
+        .glass {
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 145, 0, 0.18);
+        }
+        
+        /* Loading animation for login button */
+        .loading-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading-btn:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Floating animation for logo */
+        .float {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 flex justify-center items-center h-screen p-4 overflow-hidden">
+    <!-- Interactive Background Canvas -->
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="relative z-10 glass p-8 rounded-xl max-w-md w-full shadow-2xl shadow-orange-500/30">
+        <!-- Welcome Message -->
+        <div class="text-center mb-6">
+            <h2 class="text-white text-xl font-medium">Welcome to</h2>
+        </div>
+        
+        <!-- Logo Section with PNG -->
+       <div class="logo-container float">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="SalesFlow AI Logo" class="h-16 w-auto">
+</div>
+
+        <!-- Login Form -->
+        <form method="post">
+            <div class="mb-6">
+                <label for="username" class="block text-white text-xl font-semibold mb-2">Username</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="fas fa-user text-orange-500"></i>
+                    </span>
+                    <input type="text" id="username" name="username" class="w-full pl-10 px-4 py-3 bg-gray-700/80 text-white rounded-md border-2 border-orange-500/70 focus:outline-none focus:ring-2 focus:ring-orange-500 text-lg input-focus" required>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label for="password" class="block text-white text-xl font-semibold mb-2">Password</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="fas fa-lock text-orange-500"></i>
+                    </span>
+                    <input type="password" id="password" name="password" class="w-full pl-10 px-4 py-3 bg-gray-700/80 text-white rounded-md border-2 border-orange-500/70 focus:outline-none focus:ring-2 focus:ring-orange-500 text-lg input-focus" required>
+                </div>
+            </div>
+
+            <button type="submit" id="loginBtn" class="w-full py-4 bg-orange-500 text-white rounded-md text-lg font-bold hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 glow-button loading-btn">
+                <i class="fas fa-sign-in-alt mr-2"></i>Access Dashboard
+            </button>
+            
+            <!-- Forgot Password Link -->
+            <div class="mt-4 text-center">
+                <a href="#" class="text-orange-400 hover:text-orange-300 text-sm transition-colors duration-300">Forgot your password?</a>
+            </div>
+        </form>
+        
+        <!-- Sign Up Prompt -->
+  <!-- Secure Login Indicator -->
+<div class="mt-6 flex justify-center items-center text-gray-400 text-xs">
+     <i class="fas fa-lock mr-2 text-green-500 animate-lock"></i>
+    <span>Secure login | SSL encrypted</span>
+</div>
+
+        
+    
+    </div>
+
+    <!-- Include Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    
+    <!-- Interactive Background Animation Script -->
+    <script>
+        // Set up the canvas
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Make canvas fill the entire screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Resize canvas when window is resized
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Create an array to store particles
+        const particles = [];
+        const particleCount = 100;
+        const connectDistance = 150;
+        const mouseInfluenceRadius = 150;
+        
+        // Mouse position
+        let mouse = {
+            x: null,
+            y: null,
+            radius: mouseInfluenceRadius
+        };
+        
+        // Track mouse movement
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+        
+        // When mouse leaves the screen
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 1;
+                this.speedY = (Math.random() - 0.5) * 1;
+                this.color = `rgba(255, ${Math.floor(Math.random() * 100) + 100}, 0, ${Math.random() * 0.5 + 0.2})`;
+            }
+            
+            // Update particle position
+            update() {
+                // Move particle
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // Reverse direction when hitting edges
+                if (this.x > canvas.width || this.x < 0) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.speedY = -this.speedY;
+                }
+                
+                // Mouse interaction
+                if (mouse.x !== undefined && mouse.y !== undefined) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        
+                        const directionX = forceDirectionX * force * 5;
+                        const directionY = forceDirectionY * force * 5;
+                        
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
+                }
+            }
+            
+            // Draw particle
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+        
+        // Initialize particles
+        function init() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        // Connect particles if they are close enough
+        function connect() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < connectDistance) {
+                        // Calculate opacity based on distance
+                        const opacity = 1 - (distance / connectDistance);
+                        
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 145, 0, ${opacity * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw all particles
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            
+            connect();
+        }
+        
+        // Initialize and start the animation
+        init();
+        animate();
+        
+        // Login button effect
+        document.getElementById('loginBtn').addEventListener('mouseover', function() {
+            this.classList.add('loading-btn');
+        });
+        
+        document.getElementById('loginBtn').addEventListener('mouseout', function() {
+            this.classList.remove('loading-btn');
+        });
+    </script>
+</body>
+</html>
